@@ -6,7 +6,7 @@
 1. Open a terminal or command prompt.
 2. Run the following command to clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone [<repository-url>](https://github.com/bgboss69/FullStackApp.git)
    ```
    Replace `<repository-url>` with the actual URL of the FullStackApp repository.
 
