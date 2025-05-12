@@ -1,0 +1,53 @@
+@page "/fetchproducts"
+@inject HttpClient HttpClient
+
+<h3>Product List</h3>
+
+<ul>
+   @if (products != null)
+    {
+        foreach (var product in products)
+        {
+            <li>@product.Name - $@product.Price</li>
+        }
+    }
+    else
+    {
+        <li>Loading...</li>
+    }
+</ul>
+
+@code {
+    private Product[]? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProductsAsync();
+    }
+
+    private async Task LoadProductsAsync()
+    {
+        try
+        {
+            products = await HttpClient.GetFromJsonAsync<Product[]>("/api/productlist");
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.Error.WriteLine($"Request error: {ex.Message}");
+            products = Array.Empty<Product>(); // Set to an empty array to handle gracefully
+        }
+        catch (TaskCanceledException)
+        {
+            Console.Error.WriteLine("Request timed out.");
+            products = Array.Empty<Product>(); // Handle timeout scenario
+        }
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; } // Made nullable to fix the error
+        public double Price { get; set; }
+        public int Stock { get; set; }
+    }
+}
